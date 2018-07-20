@@ -188,11 +188,11 @@ class OrderlessBernoulliNADE(NADE):
         V = self.V.get_value()
         c = self.c.get_value()
         nl = self.parameters["nonlinearity"].get_numpy_f()
-        samples = np.zeros((self.n_visible, n))
+        samples = np.zeros((n,self.n_visible))
         for s in xrange(n):
             # Sample an ordering
             ordering = self.orderings[np.random.randint(len(self.orderings))]
-            a = np.zeros((self.n_hidden,))  # H
+            a = np.zeros((1,self.n_hidden,))  # H
             input_mask_contribution = np.zeros((self.n_hidden))
             for j in xrange(self.n_visible):
                 i = ordering[j]
@@ -202,6 +202,6 @@ class OrderlessBernoulliNADE(NADE):
                 t = np.dot(h, V[i]) + c[i]
                 p_xi_is_one = sigmoid(t) * 0.9999 + 0.0001 * 0.5  # B
                 input_mask_contribution += Wflags[i]
-                a += np.dot(samples[i, s][np.newaxis, np.newaxis], W1[i][np.newaxis, :])
-                samples[i, s] = np.random.random() < p_xi_is_one
+                a += np.dot(samples[s, i][np.newaxis, np.newaxis], W1[i][np.newaxis, :])
+                samples[s, i] = np.random.random() < p_xi_is_one
         return samples
