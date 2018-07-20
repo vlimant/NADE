@@ -57,7 +57,9 @@ class SGD(Epochable, Optimizer):
         if len(ret) == 3:
             step_loss, gradient, updates = ret
         else:
-            updates = theano.compat.python2x.OrderedDict()
+            from collections import OrderedDict
+            updates = OrderedDict()
+            #updates = theano.compat.python2x.OrderedDict()
             step_loss, gradient = ret
         return step_loss, gradient, updates
 
